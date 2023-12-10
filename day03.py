@@ -46,7 +46,8 @@ def has_adjacent_symbol(number: Number, lines: list[str]):
     rightmost_adjacent = min(line_len - 1, end)
     sl = slice(leftmost_adjacent, rightmost_adjacent + 1)
 
-    is_symbol = lambda c: not c.isdigit() and c != "."
+    def is_symbol(c):
+        return not c.isdigit() and c != "."
 
     # Current line
     if is_symbol(lines[line_num][leftmost_adjacent]) or is_symbol(

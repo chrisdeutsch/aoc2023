@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 from collections import Counter
 from functools import cached_property
-from enum import Enum
 
 
 CARD_RANK = {

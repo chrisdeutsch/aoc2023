@@ -3,7 +3,7 @@ import pytest
 import re
 
 from dataclasses import dataclass
-from itertools import cycle, combinations_with_replacement
+from itertools import cycle
 
 
 @dataclass
@@ -155,7 +155,7 @@ CCC = (AAA, XXX)"""
     assert find_cycle("AAA", directions, nodes) == (0, 3)
 
 
-def test_cycle_start2_len():
+def test_cycle_start2_len12():
     test_input = """\
 LLL
 

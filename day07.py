@@ -99,7 +99,26 @@ def part1(inputs):
 def part2(inputs):
     hands_and_bids = parse(inputs)
 
+    # Determine the best hands
+    best_hands = []
+    for hand, bid in hands_and_bids:
+        rank_tuple = tuple(
+            map(lambda x: -1 if x == CARD_RANK["J"] else x, hand.rank_tuple)
+        )
+
+        possible_hands = (
+            Hand(str(hand).replace("J", replacement)) for replacement in "23456789TQKA"
+        )
+
+        best_hand = max(possible_hands, key=lambda h: h.rank_tuple[0])
+        best_hand_rank_tuple = (best_hand.rank_tuple[0],) + rank_tuple[1:]
+
+        best_hands.append((best_hand, bid, best_hand_rank_tuple))
+
     total_winnings = 0
+    for rank, (hand, bid, _) in enumerate(sorted(best_hands, key=lambda x: x[2]), 1):
+        total_winnings += rank * bid
+
     return total_winnings
 
 
@@ -124,3 +143,4 @@ if __name__ == "__main__":
         inputs = fin.read()
 
     print(f"Part 1: {part1(inputs)}")
+    print(f"Part 2: {part2(inputs)}")

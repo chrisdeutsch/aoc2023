@@ -3,7 +3,7 @@ import pytest
 import re
 
 from dataclasses import dataclass
-from itertools import cycle
+from itertools import cycle, combinations_with_replacement
 
 
 @dataclass
@@ -50,15 +50,50 @@ def part1(inputs):
         current_node = perform_step(current_node, direction, nodes)
 
 
+def find_cycle(starting_node, directions, nodes):
+    current_node = starting_node
+    visit_history = [(len(directions), current_node)]
+
+    for idx, direction in cycle(enumerate(directions, 1)):
+        current_node = perform_step(current_node, direction, nodes)
+
+        if (idx, current_node) in visit_history:
+            cycle_start = visit_history.index((idx, current_node))
+            cycle_length = len(visit_history) - cycle_start
+            return cycle_start, cycle_length
+        else:
+            visit_history.append((idx, current_node))
+
+    return None
+
+
 def part2(inputs):
     directions, nodes = parse(inputs)
-
     current_nodes = [node for node in nodes if node.endswith("A")]
-    for step, direction in enumerate(cycle(directions)):
-        if all(node.endswith("Z") for node in current_nodes):
-            return step
-        
-        current_nodes = [perform_step(node, direction, nodes) for node in current_nodes]
+
+    # Find cycles
+    cycle_lengths = []
+    for node in current_nodes:
+        cycle_start, cycle_length = find_cycle(node, directions, nodes)
+        assert cycle_length % len(directions) == 0
+
+        current_node = node
+
+        steps = None
+        for step, direction in enumerate(cycle(directions)):
+            if current_node.endswith("Z"):
+                steps = step
+                break
+
+            current_node = perform_step(current_node, direction, nodes)
+
+        # For some reason the first **Z is always equal to the length of the cycle
+        print(f"{node} -> {cycle_start = } {cycle_length = } {steps = }")
+        cycle_lengths.append(cycle_length)
+
+    import math
+
+    return math.lcm(*cycle_lengths)
 
 
 TEST_INPUT_1 = """\
@@ -107,6 +142,31 @@ def test_part1(input, expected):
 
 def test_part2():
     assert part2(TEST_INPUT_3) == 6
+
+
+def test_cycle_start0_len3():
+    test_input = """\
+LLL
+
+AAA = (BBB, XXX)
+BBB = (CCC, XXX)
+CCC = (AAA, XXX)"""
+    directions, nodes = parse(test_input)
+    assert find_cycle("AAA", directions, nodes) == (0, 3)
+
+
+def test_cycle_start2_len():
+    test_input = """\
+LLL
+
+AAA = (BBB, XXX)
+BBB = (CCC, XXX)
+CCC = (DDD, XXX)
+DDD = (EEE, XXX)
+EEE = (FFF, XXX)
+FFF = (CCC, XXX)"""
+    directions, nodes = parse(test_input)
+    assert find_cycle("AAA", directions, nodes) == (2, 12)
 
 
 if __name__ == "__main__":

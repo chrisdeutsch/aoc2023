@@ -1,16 +1,6 @@
 #!/usr/bin/env python
 import pytest
 
-from dataclasses import dataclass
-from typing import Self
-
-
-@dataclass
-class PathNode:
-    coordinates: tuple[int, int]
-    prev: Self | None
-    next: Self | None
-
 
 def pipe_connections(char):
     match char:

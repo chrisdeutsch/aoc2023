@@ -42,6 +42,27 @@ def expand(galaxy):
     return galaxy
 
 
+def get_expansion_factors(galaxy, factor=2):
+    num_rows = len(galaxy)
+    num_cols = len(galaxy[0])
+
+    row_expansion_factors = []
+    for rownum in range(num_rows):
+        if all(galaxy[rownum][i] == "." for i in range(num_cols)):
+            row_expansion_factors.append(factor)
+        else:
+            row_expansion_factors.append(1)
+
+    col_expansion_factors = []
+    for colnum in range(num_cols):
+        if all(galaxy[i][colnum] == "." for i in range(num_rows)):
+            col_expansion_factors.append(factor)
+        else:
+            col_expansion_factors.append(1)
+
+    return row_expansion_factors, col_expansion_factors
+
+
 def get_galaxy_coords(galaxy):
     galaxies = []
     for rownum, row in enumerate(galaxy):
@@ -60,6 +81,26 @@ def part1(inputs):
     for (x1, y1), (x2, y2) in combinations(coords, 2):
         dx = abs(x1 - x2)
         dy = abs(y1 - y2)
+        total_distance += dx + dy
+
+    return total_distance
+
+
+def part2(inputs, factor=1000000):
+    galaxy = parse(inputs)
+    coords = get_galaxy_coords(galaxy)
+    row_facts, col_facts = get_expansion_factors(galaxy, factor=factor)
+
+    total_distance = 0
+    for (x1, y1), (x2, y2) in combinations(coords, 2):
+        dx = 0
+        for i in range(min(x1, x2), max(x1, x2)):
+            dx += row_facts[i]
+
+        dy = 0
+        for i in range(min(y1, y2), max(y1, y2)):
+            dy += col_facts[i]
+
         total_distance += dx + dy
 
     return total_distance
@@ -110,8 +151,13 @@ def test_part1():
     assert part1(TEST_INPUT) == 374
 
 
+def test_part1_smarter():
+    assert part2(TEST_INPUT, factor=2) == 374
+
+
 if __name__ == "__main__":
     with open("inputs/day11.txt") as fin:
         inputs = fin.read()
 
     print(f"Part 1: {part1(inputs)}")
+    print(f"Part 2: {part2(inputs)}")

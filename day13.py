@@ -41,8 +41,8 @@ def find_reflection(x):
             left_idx -= 1
             right_idx += 1
         else:
-            return i 
-            
+            return i
+
     return None
 
 
@@ -56,7 +56,7 @@ def part1(inputs):
     for grid in parse(inputs):
         horizontal = find_reflection(grid.rows)
         vertical = find_reflection(grid.columns)
-        
+
         if horizontal is not None and vertical is not None:
             raise RuntimeError("Both horizontal and vertical reflection axis possible")
 
@@ -111,6 +111,7 @@ def test_find_reflection_horizontal():
     grid = next(inputs)
     assert find_reflection(grid.rows) == 3
 
+
 def test_find_reflection_vertical_none():
     inputs = parse(TEST_INPUT)
     next(inputs)  # Discard first element
@@ -135,7 +136,6 @@ def test_find_reflection_vertical_corner():
     assert find_reflection(grid.columns) == 0
 
 
-
 def test_part1():
     assert part1(TEST_INPUT) == 405
 
@@ -143,5 +143,5 @@ def test_part1():
 if __name__ == "__main__":
     with open("inputs/day13.txt") as fin:
         inputs = fin.read()
-    
+
     print(f"Part 1: {part1(inputs)}")

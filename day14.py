@@ -39,6 +39,7 @@ def part1(inputs):
     grid_tilted = tilt_north(grid)
     return get_load(grid_tilted)
 
+
 TEST_INPUT = """\
 O....#....
 O.OO#....#

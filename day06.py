@@ -2,7 +2,7 @@
 import math
 
 
-def part1():
+def part1() -> int:
     time = [57, 72, 69, 92]
     distance = [291, 1172, 1176, 2026]
 
@@ -11,9 +11,9 @@ def part1():
         num_ways_to_win = 0
         for hold_time in range(1, available_time):
             velocity = hold_time
-            distance = velocity * (available_time - hold_time)
+            dist = velocity * (available_time - hold_time)
 
-            if distance > distance_record:
+            if dist > distance_record:
                 num_ways_to_win += 1
 
         prod_of_ways_to_win *= num_ways_to_win
@@ -21,7 +21,7 @@ def part1():
     return prod_of_ways_to_win
 
 
-def part2():
+def part2() -> int:
     time = int("".join(map(str, [57, 72, 69, 92])))
     distance = int("".join(map(str, [291, 1172, 1176, 2026])))
 

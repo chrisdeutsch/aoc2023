@@ -9,13 +9,16 @@ class Game:
     draws: list[dict[str, int]]
 
 
-def parse(inputs: str):
+def parse(inputs: str) -> list[Game]:
     pattern = re.compile(r"^Game (\d+): (.*)$")
     pattern_color = re.compile(r"(\d+) (red|green|blue)")
 
     games = []
     for line in inputs.splitlines():
         m = pattern.match(line)
+        if m is None:
+            continue
+
         game_id, cubes = m.groups()
 
         draws = []
@@ -31,7 +34,7 @@ def parse(inputs: str):
     return games
 
 
-def possible_game(game: Game, red: int, green: int, blue: int):
+def possible_game(game: Game, red: int, green: int, blue: int) -> bool:
     for draw in game.draws:
         if (
             draw.get("red", 0) > red
@@ -43,7 +46,7 @@ def possible_game(game: Game, red: int, green: int, blue: int):
     return True
 
 
-def part1(games: list[Game]):
+def part1(games: list[Game]) -> int:
     red = 12
     green = 13
     blue = 14
@@ -56,7 +59,7 @@ def part1(games: list[Game]):
     return s
 
 
-def part2(games):
+def part2(games: list[Game]) -> int:
     total_power = 0
     for game in games:
         max_red = max(draw.get("red", 0) for draw in game.draws)

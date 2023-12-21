@@ -2,7 +2,7 @@
 import pytest
 
 
-def pipe_connections(char):
+def pipe_connections(char: str) -> tuple[str, ...]:
     match char:
         case "|":
             return ("N", "S")
@@ -20,16 +20,18 @@ def pipe_connections(char):
             return tuple()
 
 
-def find_start(maze):
+def find_start(maze: list[list[str]]) -> tuple[int, int] | None:
     for row_num, row in enumerate(maze):
         try:
             index = row.index("S")
             return row_num, index
         except ValueError:
             continue
+ 
+    return None
 
 
-def walk(maze, start):
+def walk(maze: list[list[str]], start: tuple[int, int]) -> list[tuple[int, int]]:
     x, y = start
 
     # Determine current direction
@@ -79,16 +81,20 @@ def walk(maze, start):
     return path
 
 
-def part1(inputs):
+def part1(inputs: str) -> int:
     maze = list(map(list, inputs.splitlines()))
     start = find_start(maze)
+    assert start is not None
+
     path = walk(maze, start)
     return len(path) // 2
 
 
-def part2(inputs):
+def part2(inputs: str) -> int:
     maze = list(map(list, inputs.splitlines()))
     start = find_start(maze)
+    assert start is not None
+
     path = walk(maze, start)
 
     return 0
@@ -159,9 +165,11 @@ L7JLJL-JLJLJL--JLJ.L"""
     ],
     ids=["loop1", "loop2"],
 )
-def test_simple_loop(inputs):
+def test_simple_loop(inputs: str) -> None:
     maze = list(map(list, inputs.splitlines()))
     start = find_start(maze)
+    assert start is not None
+    
     path = walk(maze, start)
 
     assert path == [(1, 1), (1, 2), (1, 3), (2, 3), (3, 3), (3, 2), (3, 1), (2, 1)]
@@ -175,7 +183,7 @@ def test_simple_loop(inputs):
     ],
     ids=["loop2", "loop3"],
 )
-def test_farthest_point(inputs, expected):
+def test_farthest_point(inputs: str, expected: int) -> None:
     assert part1(inputs) == expected
 
 
@@ -184,7 +192,7 @@ def test_farthest_point(inputs, expected):
     [(LOOP_4, 4), (LOOP_5, 8), (LOOP_6, 10)],
     ids=["loop4", "loop5", "loop6"],
 )
-def test_tiles_contained(inputs, expected):
+def test_tiles_contained(inputs: str, expected: int) -> None:
     assert part2(inputs) == expected
 
 

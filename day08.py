@@ -12,10 +12,10 @@ class TreeNode:
     right: str
 
 
-def parse(inputs):
+def parse(inputs: str) -> tuple[str, dict[str, TreeNode]]:
     lines = inputs.splitlines()
     directions = lines[0]
-
+    
     node_pattern = re.compile(r"^([A-Z0-9]{3}) = \(([A-Z0-9]{3}), ([A-Z0-9]{3})\)$")
     nodes = {}
     for line in lines[1:]:
@@ -30,7 +30,7 @@ def parse(inputs):
     return directions, nodes
 
 
-def perform_step(current_node, direction, nodes):
+def perform_step(current_node: str, direction: str, nodes: dict[str, TreeNode]) -> str:
     if direction == "L":
         return nodes[current_node].left
     elif direction == "R":
@@ -39,7 +39,7 @@ def perform_step(current_node, direction, nodes):
         raise RuntimeError("Unknown direction")
 
 
-def part1(inputs):
+def part1(inputs: str) -> int | None:
     directions, nodes = parse(inputs)
 
     current_node = "AAA"
@@ -49,8 +49,10 @@ def part1(inputs):
 
         current_node = perform_step(current_node, direction, nodes)
 
+    return None
 
-def find_cycle(starting_node, directions, nodes):
+
+def find_cycle(starting_node: str, directions: str, nodes: dict[str, TreeNode]) -> tuple[int, int] | None:
     current_node = starting_node
     visit_history = [(len(directions), current_node)]
 
@@ -67,14 +69,16 @@ def find_cycle(starting_node, directions, nodes):
     return None
 
 
-def part2(inputs):
+def part2(inputs: str) -> int:
     directions, nodes = parse(inputs)
     current_nodes = [node for node in nodes if node.endswith("A")]
 
     # Find cycles
     cycle_lengths = []
     for node in current_nodes:
-        cycle_start, cycle_length = find_cycle(node, directions, nodes)
+        c = find_cycle(node, directions, nodes)
+        assert c is not None
+        cycle_start, cycle_length = c
         assert cycle_length % len(directions) == 0
 
         current_node = node
@@ -136,15 +140,15 @@ XXX = (XXX, XXX)"""
     ],
     ids=["TEST_INPUT_1", "TEST_INPUT_2"],
 )
-def test_part1(input, expected):
+def test_part1(input: str, expected: int) -> None:
     assert part1(input) == expected
 
 
-def test_part2():
+def test_part2() -> None:
     assert part2(TEST_INPUT_3) == 6
 
 
-def test_cycle_start0_len3():
+def test_cycle_start0_len3() -> None:
     test_input = """\
 LLL
 
@@ -155,7 +159,7 @@ CCC = (AAA, XXX)"""
     assert find_cycle("AAA", directions, nodes) == (0, 3)
 
 
-def test_cycle_start2_len12():
+def test_cycle_start2_len12() -> None:
     test_input = """\
 LLL
 

@@ -1,12 +1,8 @@
-from copy import deepcopy
+def parse(inputs: str) -> list[list[str]]:
+    return list(map(lambda x: list(x), inputs.splitlines()))
 
 
-def parse(inputs):
-    return list(map(list, inputs.splitlines()))
-
-
-def tilt_north(grid):
-    grid = deepcopy(grid)
+def tilt_north(grid: list[list[str]]) -> list[list[str]]:
     num_rows = len(grid)
     num_columns = len(grid[0])
 
@@ -27,14 +23,14 @@ def tilt_north(grid):
     return grid
 
 
-def get_load(rows):
+def get_load(rows: list[list[str]]) -> int:
     total_load = 0
     for load_per_rock, row in enumerate(reversed(rows), 1):
         total_load += sum(load_per_rock for char in row if char == "O")
     return total_load
 
 
-def part1(inputs):
+def part1(inputs: str) -> int:
     grid = parse(inputs)
     grid_tilted = tilt_north(grid)
     return get_load(grid_tilted)
@@ -66,20 +62,20 @@ O..#.OO...
 #....#...."""
 
 
-def test_parse():
+def test_parse() -> None:
     assert parse("O.\n.#\n..") == [["O", "."], [".", "#"], [".", "."]]
 
 
-def test_tilt_north():
+def test_tilt_north() -> None:
     grid = tilt_north(parse(TEST_INPUT))
     assert "\n".join(map(lambda x: "".join(x), grid)) == TEST_INPUT_2
 
 
-def test_load():
+def test_load() -> None:
     assert get_load(parse(TEST_INPUT_2)) == 136
 
 
-def test_part1():
+def test_part1() -> None:
     assert part1(TEST_INPUT) == 136
 
 

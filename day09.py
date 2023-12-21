@@ -2,7 +2,7 @@
 import pytest
 
 
-def parse(inputs):
+def parse(inputs: str) -> list[list[int]]:
     histories = []
     for line in inputs.splitlines():
         mapped_to_int = map(int, line.split())
@@ -11,7 +11,7 @@ def parse(inputs):
     return histories
 
 
-def forecast(history, backwards=False):
+def forecast(history: list[int], backwards: bool=False) -> int:
     steps = [history]
 
     while not all(element == 0 for element in history):
@@ -32,7 +32,7 @@ def forecast(history, backwards=False):
         return total
 
 
-def part1(inputs):
+def part1(inputs: str) -> int:
     histories = parse(inputs)
 
     total = 0
@@ -42,7 +42,7 @@ def part1(inputs):
     return total
 
 
-def part2(inputs):
+def part2(inputs: str) -> int:
     histories = parse(inputs)
 
     total = 0
@@ -62,12 +62,12 @@ TEST_3 = "10 13 16 21 30 45"
     [(TEST_1, 18), (TEST_2, 28), (TEST_3, 68)],
     ids=["case1", "case2", "case3"],
 )
-def test_forecast(inputs, expected):
+def test_forecast(inputs: str, expected: int) -> None:
     (history,) = parse(inputs)
     assert forecast(history) == expected
 
 
-def test_part1():
+def test_part1() -> None:
     inputs = "\n".join([TEST_1, TEST_2, TEST_3])
     assert part1(inputs) == 114
 
@@ -77,12 +77,12 @@ def test_part1():
     [(TEST_1, -3), (TEST_2, 0), (TEST_3, 5)],
     ids=["case1", "case2", "case3"],
 )
-def test_backcast(inputs, expected):
+def test_backcast(inputs: str, expected: int) -> None:
     (history,) = parse(inputs)
     assert forecast(history, backwards=True) == expected
 
 
-def test_part2():
+def test_part2() -> None:
     inputs = "\n".join([TEST_1, TEST_2, TEST_3])
     assert part2(inputs) == 2
 

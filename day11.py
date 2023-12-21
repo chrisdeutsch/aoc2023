@@ -2,11 +2,11 @@
 from itertools import combinations
 
 
-def parse(inputs):
-    return list(map(list, inputs.splitlines()))
+def parse(inputs: str) -> list[list[str]]:
+    return list(map(lambda x: list(x), inputs.splitlines()))
 
 
-def expand(galaxy):
+def expand(galaxy: list[list[str]]) -> list[list[str]]:
     num_rows = len(galaxy)
     num_cols = len(galaxy[0])
 
@@ -42,7 +42,9 @@ def expand(galaxy):
     return galaxy
 
 
-def get_expansion_factors(galaxy, factor=2):
+def get_expansion_factors(
+    galaxy: list[list[str]], factor: int = 2
+) -> tuple[list[int], list[int]]:
     num_rows = len(galaxy)
     num_cols = len(galaxy[0])
 
@@ -63,7 +65,7 @@ def get_expansion_factors(galaxy, factor=2):
     return row_expansion_factors, col_expansion_factors
 
 
-def get_galaxy_coords(galaxy):
+def get_galaxy_coords(galaxy: list[list[str]]) -> list[tuple[int, int]]:
     galaxies = []
     for rownum, row in enumerate(galaxy):
         gen = (colnum for colnum, c in enumerate(row) if c == "#")
@@ -73,7 +75,7 @@ def get_galaxy_coords(galaxy):
     return galaxies
 
 
-def part1(inputs):
+def part1(inputs: str) -> int:
     galaxy = expand(parse(inputs))
     coords = get_galaxy_coords(galaxy)
 
@@ -86,7 +88,7 @@ def part1(inputs):
     return total_distance
 
 
-def part2(inputs, factor=1000000):
+def part2(inputs: str, factor: int = 1000000) -> int:
     galaxy = parse(inputs)
     coords = get_galaxy_coords(galaxy)
     row_facts, col_facts = get_expansion_factors(galaxy, factor=factor)
@@ -133,13 +135,13 @@ TEST_INPUT_EXPANDED = """\
 #....#......."""
 
 
-def test_expand():
+def test_expand() -> None:
     galaxy = parse(TEST_INPUT)
     galaxy_expanded = parse(TEST_INPUT_EXPANDED)
     assert expand(galaxy) == galaxy_expanded
 
 
-def test_get_galaxy_coords():
+def test_get_galaxy_coords() -> None:
     test = """\
 .#..
 ..#.
@@ -147,11 +149,11 @@ def test_get_galaxy_coords():
     assert get_galaxy_coords(parse(test)) == [(0, 1), (1, 2), (2, 3)]
 
 
-def test_part1():
+def test_part1() -> None:
     assert part1(TEST_INPUT) == 374
 
 
-def test_part1_smarter():
+def test_part1_smarter() -> None:
     assert part2(TEST_INPUT, factor=2) == 374
 
 

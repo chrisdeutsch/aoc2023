@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from collections import Counter
 from functools import cached_property
+from typing import Self
 
 
 CARD_RANK = {
@@ -32,12 +33,12 @@ TYPE_RANK = {
 
 
 class Hand:
-    def __init__(self, string: str):
+    def __init__(self, string: str) -> None:
         assert len(string) == 5
         self.string = string
 
     @cached_property
-    def type(self):
+    def type(self) -> str:
         counter = Counter(self.string)
         counts = [count for count in sorted(counter.values())]
 
@@ -59,20 +60,22 @@ class Hand:
             raise RuntimeError("Unknown hand type")
 
     @cached_property
-    def rank_tuple(self):
+    def rank_tuple(self) -> tuple[int, ...]:
         return (TYPE_RANK[self.type],) + tuple(CARD_RANK[card] for card in self.string)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.string
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"Hand('{self.string}')"
 
-    def __eq__(self, rhs):
+    def __eq__(self, rhs: object) -> bool:
+        if not isinstance(rhs, Hand):
+            raise NotImplemented
         return self.string == rhs.string
 
 
-def parse(inputs):
+def parse(inputs: str) -> list[int]:
     hands_and_bids = []
     for line in inputs.splitlines():
         hand, bid = line.split()
@@ -83,7 +86,7 @@ def parse(inputs):
     return hands_and_bids
 
 
-def part1(inputs):
+def part1(inputs: str) -> int:
     hands_and_bids = parse(inputs)
 
     total_winnings = 0
@@ -95,7 +98,7 @@ def part1(inputs):
     return total_winnings
 
 
-def part2(inputs):
+def part2(inputs: str) -> int:
     hands_and_bids = parse(inputs)
 
     # Determine the best hands
@@ -129,11 +132,11 @@ KTJJT 220
 QQQJA 483"""
 
 
-def test_example1():
+def test_example1() -> None:
     assert part1(TEST_INPUT) == 6440
 
 
-def test_example2():
+def test_example2() -> None:
     assert part2(TEST_INPUT) == 5905
 
 

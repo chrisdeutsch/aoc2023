@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-def part1(inputs: str):
+def part1(inputs: str) -> int:
     s = 0
     for line in inputs.splitlines():
         digits = [char for char in line if char.isdigit()]
@@ -8,7 +8,7 @@ def part1(inputs: str):
     return s
 
 
-def part2(inputs: str):
+def part2(inputs: str) -> int:
     mapping = {
         "one": "1",
         "two": "2",

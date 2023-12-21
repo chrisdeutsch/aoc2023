@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from dataclasses import dataclass
+from typing import Generator
 
 
 @dataclass
@@ -7,7 +8,7 @@ class Number:
     line_number: int
     span: tuple[int, int]
 
-    def is_adjacent(self, x, y):
+    def is_adjacent(self, x: int, y: int) -> bool:
         if (
             (x == self.line_number + 1 or x == self.line_number - 1)
             and self.span[0] - 1 <= y
@@ -20,7 +21,7 @@ class Number:
         return False
 
 
-def find_numbers(lines: list[str]):
+def find_numbers(lines: list[str]) -> Generator[Number, None, None]:
     for line_num, line in enumerate(lines):
         begin = None
         for char_num, char in enumerate(line):
@@ -37,7 +38,7 @@ def find_numbers(lines: list[str]):
             yield Number(line_number=line_num, span=(begin, len(line)))
 
 
-def has_adjacent_symbol(number: Number, lines: list[str]):
+def has_adjacent_symbol(number: Number, lines: list[str]) -> bool:
     line_num = number.line_number
     line_len = len(lines[line_num])
     begin, end = number.span
@@ -46,7 +47,7 @@ def has_adjacent_symbol(number: Number, lines: list[str]):
     rightmost_adjacent = min(line_len - 1, end)
     sl = slice(leftmost_adjacent, rightmost_adjacent + 1)
 
-    def is_symbol(c):
+    def is_symbol(c: str) -> bool:
         return not c.isdigit() and c != "."
 
     # Current line
@@ -66,7 +67,7 @@ def has_adjacent_symbol(number: Number, lines: list[str]):
     return False
 
 
-def part1(lines: list[str]):
+def part1(lines: list[str]) -> int:
     s = 0
     for number in find_numbers(lines):
         if has_adjacent_symbol(number, lines):
@@ -77,14 +78,14 @@ def part1(lines: list[str]):
     return s
 
 
-def find_gear_candidates(lines: list[str]):
+def find_gear_candidates(lines: list[str]) -> Generator[tuple[int, int], None, None]:
     for line_num, line in enumerate(lines):
         for char_num, char in enumerate(line):
             if char == "*":
                 yield (line_num, char_num)
 
 
-def part2(lines: list[str]):
+def part2(lines: list[str]) -> int:
     s = 0
     for gear_line_num, gear_char_num in find_gear_candidates(lines):
         num_count = 0

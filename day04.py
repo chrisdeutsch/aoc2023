@@ -1,5 +1,6 @@
 import re
 from dataclasses import dataclass
+from typing import Generator
 
 
 @dataclass
@@ -8,10 +9,13 @@ class Card:
     num_matches: int
 
 
-def parse_cards(inputs: str):
+def parse_cards(inputs: str) -> Generator[Card, None, None]:
     pattern = re.compile(r"^Card\s+(\d+):\s+(.+)\s\|\s(.+)$")
     for line in inputs.splitlines():
         m = pattern.match(line)
+        if m is None:
+            continue
+
         card_num = int(m.group(1))
         winning_nums = set(m.group(2).split())
         nums = set(m.group(3).split())
@@ -20,7 +24,7 @@ def parse_cards(inputs: str):
         yield Card(card_num, num_matches)
 
 
-def part1(inputs: str):
+def part1(inputs: str) -> int:
     total_points = 0
     for card in parse_cards(inputs):
         if card.num_matches > 0:
@@ -29,7 +33,7 @@ def part1(inputs: str):
     return total_points
 
 
-def part2(inputs: str):
+def part2(inputs: str) -> int:
     original_cards = list(parse_cards(inputs))
 
     total_cards = len(original_cards)
@@ -52,11 +56,11 @@ Card 5: 87 83 26 28 32 | 88 30 70 12 93 22 82 36
 Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11"""
 
 
-def test_part1():
+def test_part1() -> None:
     assert part1(TEST_INPUT) == 13
 
 
-def test_part2():
+def test_part2() -> None:
     assert part2(TEST_INPUT) == 30
 
 

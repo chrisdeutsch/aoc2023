@@ -1,17 +1,18 @@
 #!/usr/bin/env python
 import pytest
 from functools import cache
+from typing import Generator
 
 
-def parse(inputs):
+def parse(inputs: str) -> Generator[tuple[str, list[int]], None, None]:
     for line in inputs.splitlines():
         record, runs = line.split()
         yield record, [int(x) for x in runs.split(",")]
 
 
-def count_arrangements(record, runs):
+def count_arrangements(record: str, runs: list[int]) -> int:
     @cache
-    def f(idx, run_idx, current_run_len):
+    def f(idx: int, run_idx: int, current_run_len: int) -> int:
         # Termination condition
         if idx == len(record):
             if run_idx == len(runs) and current_run_len == 0:
@@ -42,7 +43,7 @@ def count_arrangements(record, runs):
     return f(0, 0, 0)
 
 
-def part1(inputs):
+def part1(inputs: str) -> int:
     total = 0
     for record, runs in parse(inputs):
         total += count_arrangements(record, runs)
@@ -50,7 +51,7 @@ def part1(inputs):
     return total
 
 
-def part2(inputs):
+def part2(inputs: str) -> int:
     total = 0
     for i, (record, runs) in enumerate(parse(inputs)):
         total += count_arrangements("?".join(5 * [record]), 5 * runs)
@@ -70,7 +71,7 @@ TEST_INPUTS = [
 
 
 @pytest.mark.parametrize("inputs, expected", TEST_INPUTS)
-def test_count_arrangements(inputs, expected):
+def test_count_arrangements(inputs: str, expected: int) -> None:
     record, runs = next(parse(inputs))
     assert count_arrangements(record, runs) == expected
 
@@ -86,7 +87,7 @@ TEST_INPUTS_PT2 = [
 
 
 @pytest.mark.parametrize("inputs, expected", TEST_INPUTS_PT2)
-def test_count_arrangements_pt2(inputs, expected):
+def test_count_arrangements_pt2(inputs: str, expected: int) -> None:
     record, runs = next(parse(inputs))
     assert count_arrangements("?".join(5 * [record]), 5 * runs) == expected
 

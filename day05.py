@@ -9,22 +9,23 @@ class MapEntry:
     source_range_start: int
     range_length: int
 
-    def contains(self, num):
+    def contains(self, num: int) -> bool:
         return (
             self.source_range_start <= num
             and num < self.source_range_start + self.range_length
         )
 
 
-def parse_seeds(inputs):
+def parse_seeds(inputs: str) -> list[int]:
     pattern_seeds = re.compile(r"^seeds: (.*)$", re.MULTILINE)
     m = pattern_seeds.search(inputs)
+    assert m is not None 
     seeds = list(map(int, m.group(1).split()))
 
     return seeds
 
 
-def parse_maps(inputs):
+def parse_maps(inputs: str) -> defaultdict[tuple[str, str], MapEntry]:
     pattern_map = re.compile(r"^(\w+)-to-(\w+) map:$")
     pattern_map_entry = re.compile(r"^(\d+) (\d+) (\d+)$")
     maps = defaultdict(list)
@@ -45,7 +46,7 @@ def parse_maps(inputs):
     return maps
 
 
-def part1(inputs):
+def part1(inputs: str) -> int:
     seeds = parse_seeds(inputs)
     maps = parse_maps(inputs)
 
@@ -69,7 +70,7 @@ def part1(inputs):
     return min(locations)
 
 
-def part2(inputs):
+def part2(inputs: str) -> None:
     seeds = parse_seeds(inputs)
     maps = parse_maps(inputs)
 
